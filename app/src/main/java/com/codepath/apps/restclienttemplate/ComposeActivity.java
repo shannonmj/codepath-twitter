@@ -3,10 +3,13 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -22,6 +25,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etTweetInput;
     Button btnSend;
     TwitterClient client;
+    TextView tvCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         etTweetInput = findViewById(R.id.etTweetInput);
         btnSend = findViewById(R.id.btnSend);
+        tvCount = findViewById(R.id.tvCount);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +42,23 @@ public class ComposeActivity extends AppCompatActivity {
                 sendTweet();
             }
         });
+
+
+        final TextWatcher mTextEditorWatcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //This sets a textview to the current length
+                tvCount.setText(String.valueOf(s.length()));
+            }
+
+            public void afterTextChanged(Editable s) {
+                tvCount.setText(280 - s.toString().length() + "Characters Left");
+            }
+        };
+
+        etTweetInput.addTextChangedListener(mTextEditorWatcher);
 
     }
 
@@ -70,6 +92,7 @@ public class ComposeActivity extends AppCompatActivity {
         });
     }
 
-    // to post a new tweet
-    // TODO when the button is clicked, a network request should be sent to the statuses/update endpoint configured in the previous step
+
+
+
 }
