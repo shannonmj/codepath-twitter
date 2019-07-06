@@ -11,6 +11,7 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginTop="5dp"
         app:civ_border_color="#00000000"
         app:civ_border_width="2dp"
         app:layout_constraintEnd_toStartOf="@+id/tvUserName"
@@ -100,8 +101,8 @@
 
     <ImageView
         android:id="@+id/entity_tweet"
-        android:layout_width="243dp"
-        android:layout_height="148dp"
+        android:layout_width="269dp"
+        android:layout_height="153dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
