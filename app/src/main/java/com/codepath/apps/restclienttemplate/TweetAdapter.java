@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import org.parceler.Parcels;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -27,10 +30,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
     }
+
     // for each row, inflate the layout and cache references into viewholder
     @NonNull
     @Override
-
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -54,11 +57,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         viewHolder.tvUsername.setText(tweet.user.name);
         viewHolder.tvBody.setText(tweet.body);
         viewHolder.tvTime.setText(getRelativeTimeAgo(tweet.createdAt));
+        viewHolder.tvAtName.setText("@" + tweet.user.screenName);
 
         //to display profile pictures
         // also added android:usesCleartextTraffic="true" to manifest in order to clear traffic because andoroid does not support http
         //other way to do this is with if then statement (if http then make https)
         Glide.with(context).load(tweet.user.profileImageUrl).into(viewHolder.ivProfileImage);
+        if (tweet.hasEntities == true) {
+            String entitiesUrl = tweet.entity.loadURL;
+            viewHolder.ivTweetImage.setVisibility(View.VISIBLE);
+            Glide.with(context).load(entitiesUrl).into(viewHolder.ivTweetImage);
+        } else{
+            viewHolder.ivTweetImage.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -67,12 +78,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     // create ViewHolder class
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView ivProfileImage;
         private TextView tvUsername;
         public  TextView tvBody;
         public TextView tvTime;
+        public TextView tvAtName;
+        public ImageView ivTweetImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -82,6 +94,29 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvAtName = (TextView) itemView.findViewById(R.id.tvAtName);
+            ivTweetImage = (ImageView) itemView.findViewById(R.id.entity_tweet);
+            // to enable details view
+            itemView.setOnClickListener(this);
+
+        }
+
+        // to click tweet and see detailview
+        @Override
+        public void onClick(View v) {
+            //gets item position
+            int position = getAdapterPosition();
+            //make sure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                //get the tweet at the position
+                Tweet tweet = mTweets.get(position);
+                //create intent for the new activity
+                Intent intent = new Intent(context, DetailView.class);
+                //serialize the tweet using the parceler,
+                intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                //show activity
+                context.startActivity(intent);
+            }
         }
     }
 

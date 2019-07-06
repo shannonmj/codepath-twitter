@@ -14,7 +14,8 @@
         android:label="@string/Twitter"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ComposeActivity"></activity>
+        <activity android:name=".DetailView"></activity>
+        <activity android:name=".ComposeActivity" />
         <activity android:name=".TimelineActivity" />
         <activity
             android:name=".LoginActivity"

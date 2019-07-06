@@ -52,8 +52,10 @@ public class Tweet$$Parcelable
             parcel$$1 .writeInt(identityMap$$0 .put(tweet$$1));
             parcel$$1 .writeLong(tweet$$1 .uid);
             parcel$$1 .writeString(tweet$$1 .createdAt);
+            parcel$$1 .writeInt((tweet$$1 .hasEntities? 1 : 0));
             parcel$$1 .writeString(tweet$$1 .body);
             com.codepath.apps.restclienttemplate.models.User$$Parcelable.write(tweet$$1 .user, parcel$$1, flags$$0, identityMap$$0);
+            com.codepath.apps.restclienttemplate.models.Entity$$Parcelable.write(tweet$$1 .entity, parcel$$1, flags$$0, identityMap$$0);
         }
     }
 
@@ -81,9 +83,12 @@ public class Tweet$$Parcelable
             identityMap$$1 .put(reservation$$0, tweet$$4);
             tweet$$4 .uid = parcel$$3 .readLong();
             tweet$$4 .createdAt = parcel$$3 .readString();
+            tweet$$4 .hasEntities = (parcel$$3 .readInt() == 1);
             tweet$$4 .body = parcel$$3 .readString();
             User user$$0 = com.codepath.apps.restclienttemplate.models.User$$Parcelable.read(parcel$$3, identityMap$$1);
             tweet$$4 .user = user$$0;
+            Entity entity$$0 = com.codepath.apps.restclienttemplate.models.Entity$$Parcelable.read(parcel$$3, identityMap$$1);
+            tweet$$4 .entity = entity$$0;
             com.codepath.apps.restclienttemplate.models.Tweet tweet$$3 = tweet$$4;
             identityMap$$1 .put(identity$$1, tweet$$3);
             return tweet$$3;
